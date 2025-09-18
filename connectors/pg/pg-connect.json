@@ -1,0 +1,34 @@
+{
+  "name": "pg-connect",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+
+    "topics.regex": "kafka-workshop1\\.ecomm\\..*",
+
+    "connection.url": "jdbc:postgresql://postgres:5432/ecomm",
+    "connection.user": "admin",
+    "connection.password": "password",
+
+    "auto.create": "true",
+    "auto.evolve": "true",
+    "delete.enabled": "true",
+
+    "insert.mode": "upsert",
+    "pk.mode": "record_key",
+    "pk.fields": "id",
+
+    "transforms": "RenameTopic",
+    "transforms.RenameTopic.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.RenameTopic.regex": "kafka-workshop1\\.ecomm\\.(.*)",
+    "transforms.RenameTopic.replacement": "$1",
+
+    "table.name.format": "${topic}",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "true",
+
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url": "http://schema-registry:8081"
+  }
+}
